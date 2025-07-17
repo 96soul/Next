@@ -219,21 +219,23 @@ local Module: any = {} do
 	end
 
 	Module.toggle = function(meta: table)
-		local Section: Section = meta.sec or false
-		local Title: string = meta.title or "Toggle"
-		local Index: boolean = meta.index or false
-		local Setting: string = meta.setting or ""
-		local Callback: func = meta.call or ""
+		local Section = meta.sec
+		local Title = meta.title or "Toggle"
+		local Index = meta.index or false
+		local Setting = meta.setting or ""
+		local Callback = meta.call
 		local C
-		if Index then
-			if not Indexing[Setting] then
+		if Index and Setting ~= "" then
+			if not table.find(Indexing, Setting) then
 				table.insert(Indexing, Setting)
 			end
 		end
-		local Options: table = {
+		local Options = {
 			Title = Title,
 			Value = Configs[Setting],
 			Callback = function(value)
+				Configs[Setting] = value
+				Module.save(Setting, value)
 				if value then
 					C = task.spawn(function()
 						if Nets[Setting] then
@@ -241,18 +243,21 @@ local Module: any = {} do
 						end
 					end)
 				else
-					if C ~= nil then
+					if C then
 						task.cancel(C)
 					end
 				end
-				Configs[Setting] = value
-				Module.save(Setting, value)
-				if Callback ~= "" then 
+
+				if typeof(Callback) == "function" then
 					Callback(value)
 				end
 			end
 		}
-		return Section:Toggle(Options)
+		if Section and typeof(Section.Toggle) == "function" then
+			return Section:Toggle(Options)
+		else
+			warn("Invalid section or section:Toggle not found")
+		end
 	end
 
 	Module.list = function(sec: table, title: string, list: table, m: boolean, setting: string)
