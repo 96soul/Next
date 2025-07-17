@@ -64,7 +64,7 @@ local Module: any = {} do
 	end
 
 	Module.rj = function()
-		if #game.Players.LocalPlayer:GetPlayers() <= 1 then
+		if #game.Players:GetPlayers() <= 1 then
 			game.Players.LocalPlayer:Kick("\nRejoining...")
 			wait()
 			TeleportService:Teleport(PlaceId, game.Players.LocalPlayer)
