@@ -32,7 +32,8 @@ end)
 
 local Module: any = {} do
 	Module.connect = function(Value: boolean, interval: number, func: any?, customFunc: any?)
-		while Value do local startTick = tick()
+		while Value do
+			local startTick = tick()
 			if func then func()  end
 			if customFunc and customFunc() then break end
 			repeat
@@ -283,7 +284,7 @@ local Module: any = {} do
 
 	function Module:setup(window: table)
 		local Home = window:Add({Title = translate("Configure", "คอนฟิกเกอร์"),Desc = translate("Managers", "ระบบหลัก"),Icon = 132831270943713}) do
-			local Performance = Home:Sec({Title = translate("Performance", "ประสิทธิภาพ"), Side = "l"}) do
+			local Performance = Home:Sec({Title = translate("Performance", "ประสิทธิภาพ"), Side = "r"}) do
 				Module.toggle({sec = Performance,title = translate("Enable White Screen", "เปิดใช้งานจอขาว"),setting = "White Screen",call = function(v)
 					if v then
 						RunService:Set3dRenderingEnabled(false)
